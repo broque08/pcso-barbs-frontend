@@ -5,7 +5,37 @@
 
 <h1>Welcome ToDo Page - here we will consume the new API</h1>
 
-<h3>@jsonData</h3>
+@*<h3>@jsonData</h3>*@
+
+<h1>Welcome ToDo Page</h1>
+
+
+@if (todoList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Message</th>
+                <th>Created</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var todo in todoList)
+            {
+                <tr>
+                    <td>@todo.name</td>
+                    <td>@todo.message</td>
+                    <td>@todo.created</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 <button class="btn btn-primary" @onclick="AddToDo">Add To Do</button>
 
@@ -13,14 +43,17 @@
 @code {
      private int count = 0;
      private string jsonData;
+     private List<ToDoItem> todoList;
 
      private async void AddToDo()
     {
+        // Now we want to use our Web API
         count++;
         HttpClient httpClient = new HttpClient();
         jsonData = await httpClient.GetStringAsync("https://pcso-barbs-api.azurewebsites.net/todoitems");
         
         List<ToDoItem> myDeserializedClass = JsonSerializer.Deserialize<List<ToDoItem>>(jsonData);
+        todoList = JsonSerializer.Deserialize<List<ToDoItem>>(jsonData);
         StateHasChanged();
     }
 
