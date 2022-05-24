@@ -2,15 +2,20 @@
 @inject IJSRuntime JS
 
 <h1>Welcome ToDO Page - here we will consume the new API</h1>
-
+<h3>@jsonData</h3>
 <button class="btn btn-primary" @onclick="AddToDo">Add To Do</button>
 <button class="btn btn-primary" @onclick="InvokeJavaScript">Invoke JavaScript</button>
 @code {
     private int count = 0;
+    private string jsonData;
 
-    private void AddToDo()
+    private async void AddToDo()
     {
+        // Now we want use our Web API
         count++;
+        HttpClient httpClient = new HttpClient();
+        jsonData = await httpClient.GetStringAsync("https://pcso-barbs-api.azurewebsites.net/todoitems");
+        StateHasChanged();
     }
 
     private async void InvokeJavaScript()
