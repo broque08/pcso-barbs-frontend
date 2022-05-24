@@ -2,13 +2,11 @@
 @inject IJSRuntime JS
 @using System.Text.Json;
 @using System.Text.Json.Serialization;
-
-<h1>Welcome ToDo Page - here we will consume the new API</h1>
-
-@*<h3>@jsonData</h3>*@
+@using System.Net.Http.Headers
 
 <h1>Welcome ToDo Page</h1>
 
+@*<h3>@jsonData</h3>*@
 
 @if (todoList == null)
 {
@@ -37,24 +35,47 @@ else
     </table>
 }
 
+<input @bind="name" placeholder="type name"/>
+<input @bind="message" placeholder="type message" />
+<br /><br />
+
 <button class="btn btn-primary" @onclick="AddToDo">Add To Do</button>
 
 <button class="btn btn-primary" @onclick="InvokeJavaScript">Invoke JavaScript</button>
 @code {
-     private int count = 0;
-     private string jsonData;
-     private List<ToDoItem> todoList;
+    private int count = 0;
+    private string jsonData;
+    private List<ToDoItem> todoList;
 
-     private async void AddToDo()
+    private string name;
+    private string message;
+
+    private async void AddToDo()
     {
         // Now we want to use our Web API
         count++;
+
         HttpClient httpClient = new HttpClient();
+
+        ToDoItem todoItemPost = new ToDoItem
+            {
+                message = message,
+                name = name
+            };
+        string myContent = JsonSerializer.Serialize(todoItemPost);
+        byte[] buffer = System.Text.Encoding.UTF8.GetBytes(myContent);
+        ByteArrayContent byteContent = new ByteArrayContent(buffer);
+        byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+
+        await httpClient.PostAsync("https://pcso-barbs-api.azurewebsites.net/todoitems", byteContent);
+
         jsonData = await httpClient.GetStringAsync("https://pcso-barbs-api.azurewebsites.net/todoitems");
-        
-        List<ToDoItem> myDeserializedClass = JsonSerializer.Deserialize<List<ToDoItem>>(jsonData);
+
         todoList = JsonSerializer.Deserialize<List<ToDoItem>>(jsonData);
+        name = null;
+        message = null;
         StateHasChanged();
+
     }
 
     private async void InvokeJavaScript()
@@ -62,12 +83,12 @@ else
         await JS.InvokeVoidAsync("DeleteCache");
         await JS.InvokeVoidAsync("HelloAlert");
     }
-     public class ToDoItem
+    public class ToDoItem
     {
         public int id { get; set; }
         public string name { get; set; }
         public bool isComplete { get; set; }
         public string message { get; set; }
-        public DateTime created { get; set; }
+        public DateTime created { get; set; } = DateTime.Now;
     }
 }
