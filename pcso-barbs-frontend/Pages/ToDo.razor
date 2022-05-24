@@ -40,8 +40,8 @@ else
 <br /><br />
 
 <button class="btn btn-primary" @onclick="AddToDo">Add To Do</button>
-
 <button class="btn btn-primary" @onclick="InvokeJavaScript">Invoke JavaScript</button>
+<button class="btn btn-primary" @onclick="DeleteAll">Delete All</button>
 @code {
     private int count = 0;
     private string jsonData;
@@ -49,6 +49,13 @@ else
 
     private string name;
     private string message;
+
+    private async void DeleteAll()
+    {
+        HttpClient httpClient = new HttpClient();
+        await httpClient.DeleteAsync("https://pcso-barbs-api.azurewebsites.net/todoitems");
+    }
+
 
     private async void AddToDo()
     {
