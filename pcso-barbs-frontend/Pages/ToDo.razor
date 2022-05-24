@@ -1,20 +1,26 @@
 ﻿@page "/todo"
 @inject IJSRuntime JS
+@using System.Text.Json;
+@using System.Text.Json.Serialization;
 
-<h1>Welcome ToDO Page - here we will consume the new API</h1>
+<h1>Welcome ToDo Page - here we will consume the new API</h1>
+
 <h3>@jsonData</h3>
+
 <button class="btn btn-primary" @onclick="AddToDo">Add To Do</button>
+
 <button class="btn btn-primary" @onclick="InvokeJavaScript">Invoke JavaScript</button>
 @code {
-    private int count = 0;
-    private string jsonData;
+     private int count = 0;
+     private string jsonData;
 
-    private async void AddToDo()
+     private async void AddToDo()
     {
-        // Now we want use our Web API
         count++;
         HttpClient httpClient = new HttpClient();
         jsonData = await httpClient.GetStringAsync("https://pcso-barbs-api.azurewebsites.net/todoitems");
+        
+        List<ToDoItem> myDeserializedClass = JsonSerializer.Deserialize<List<ToDoItem>>(jsonData);
         StateHasChanged();
     }
 
@@ -23,5 +29,12 @@
         await JS.InvokeVoidAsync("DeleteCache");
         await JS.InvokeVoidAsync("HelloAlert");
     }
-
+     public class ToDoItem
+    {
+        public int id { get; set; }
+        public string name { get; set; }
+        public bool isComplete { get; set; }
+        public string message { get; set; }
+        public DateTime created { get; set; }
+    }
 }
