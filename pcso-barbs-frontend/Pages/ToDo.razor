@@ -4,13 +4,7 @@
 @using System.Text.Json.Serialization;
 @using System.Net.Http.Headers
 
-<h1>Welcome ToDo Page</h1>
-<!--h3>@jsonData</h3-->
-@if (todoList == null)
-{
-    <p><em>Loading...</em></p>
-}
-else
+@if (todoList != null)
 {
     <table class="table">
         <thead>
@@ -59,7 +53,7 @@ else
 <MudButton Variant="Variant.Filled" 
             EndIcon="@Icons.Material.Filled.Send"
             OnClick="DeleteAll"
-            Color="Color.Primary">Delete List</MudButton>
+            Color="Color.Error">Delete List</MudButton>
 
 
 @code {
@@ -111,7 +105,7 @@ else
         jsonData = await httpClient.GetStringAsync("https://pcso-barbs-api.azurewebsites.net/todoitems");
 
         todoList = JsonSerializer.Deserialize<List<ToDoItem>>(jsonData);
-        name = null;
+        //name = null;
         message = null;
         
     }
