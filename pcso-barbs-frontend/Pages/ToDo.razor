@@ -5,9 +5,7 @@
 @using System.Net.Http.Headers
 
 <h1>Welcome ToDo Page</h1>
-
-@*<h3>@jsonData</h3>*@
-
+<!--h3>@jsonData</h3-->
 @if (todoList == null)
 {
     <p><em>Loading...</em></p>
@@ -35,25 +33,27 @@ else
     </table>
 }
 
-<input @bind="name" placeholder="type name"/>
-<input @bind="message" placeholder="type message" />
-<br /><br />
-
+ <input @bind="name" placeholder="type name"/>
+ <input @bind="message" placeholder="type message" />
+  <br><br>
 <button class="btn btn-primary" @onclick="AddToDo">Add To Do</button>
 <button class="btn btn-primary" @onclick="InvokeJavaScript">Invoke JavaScript</button>
 <button class="btn btn-primary" @onclick="DeleteAll">Delete All</button>
+<MudButton Variant="Variant.Filled" Color="Color.Primary">Primary</MudButton>
 @code {
-    private int count = 0;
+     private int count = 0;
     private string jsonData;
     private List<ToDoItem> todoList;
 
     private string name;
     private string message;
 
-    private async void DeleteAll()
+   private async void DeleteAll()
     {
         HttpClient httpClient = new HttpClient();
         await httpClient.DeleteAsync("https://pcso-barbs-api.azurewebsites.net/todoitems");
+        await GetListAsync();
+        StateHasChanged();
     }
 
 
@@ -76,13 +76,22 @@ else
 
         await httpClient.PostAsync("https://pcso-barbs-api.azurewebsites.net/todoitems", byteContent);
 
+        await GetListAsync();
+
+        StateHasChanged();
+
+    }
+
+     private async Task GetListAsync()
+    {
+        HttpClient httpClient = new HttpClient();
+
         jsonData = await httpClient.GetStringAsync("https://pcso-barbs-api.azurewebsites.net/todoitems");
 
         todoList = JsonSerializer.Deserialize<List<ToDoItem>>(jsonData);
         name = null;
         message = null;
         StateHasChanged();
-
     }
 
     private async void InvokeJavaScript()
