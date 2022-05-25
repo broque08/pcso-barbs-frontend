@@ -6,7 +6,7 @@
 
 @if (todoList != null)
 {
-    <table class="table">
+    @*<table class="table">
         <thead>
             <tr>
                 <th>Name</th>
@@ -25,7 +25,7 @@
             }
         </tbody>
     </table>
-}
+}*@
 
  @*<input @bind="name" placeholder="type name"/>
  <input @bind="message" placeholder="type message" />
@@ -33,6 +33,20 @@
 <button class="btn btn-success" @onclick="AddToDo">Add To Do</button>
 <button class="btn btn-primary" @onclick="InvokeJavaScript">Invoke JavaScript</button>
 <button class="btn btn-danger" @onclick="DeleteAll">Delete All</button>*@
+
+  @foreach (var todo in todoList)
+    {
+        <MudCard>
+            <MudCardMedia Image="images/rose.jpg" Height="200"/>
+            <MudCardContent>
+                <MudText Typo="Typo.h5" Color="Color.Primary">@todo.name</MudText>
+                <MudText Typo="Typo.body1">@todo.message</MudText>
+                <MudText Typo="Typo.body2">@todo.created</MudText>  
+            </MudCardContent>
+        </MudCard>
+        <br />
+    }
+}
 
 <MudTextField @bind-Value="name" Label="Name" Variant="Variant.Outlined"></MudTextField>
 <MudTextField @bind-Value="message" Label="Message" Variant="Variant.Outlined"></MudTextField>
