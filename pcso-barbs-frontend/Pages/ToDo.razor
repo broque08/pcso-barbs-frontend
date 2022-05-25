@@ -64,6 +64,12 @@
     private string name;
     private string message;
 
+     protected async override Task OnInitializedAsync()
+    {
+        await GetListAsync();
+        base.OnInitializedAsync();
+    }
+
    private async void DeleteAll()
     {
         HttpClient httpClient = new HttpClient();
