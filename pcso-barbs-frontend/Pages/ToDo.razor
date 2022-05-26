@@ -37,7 +37,7 @@
   @foreach (var todo in todoList)
     {
         <MudCard>
-            <MudCardMedia Image="images/rose.jpg" Height="200"/>
+            <MudCardMedia Image="images/rose.jpg" Height="300"/>
             <MudCardContent>
                 <MudText Typo="Typo.h5" Color="Color.Primary">@todo.name</MudText>
                 <MudText Typo="Typo.body1">@todo.message</MudText>
@@ -57,7 +57,7 @@
 <MudButton Variant="Variant.Filled" 
             EndIcon="@Icons.Material.Filled.Send" 
             OnClick="AddToDo"
-            Color="Color.Primary">Add</MudButton>
+            Color="Color.Success">Add</MudButton>
 
  <MudButton Variant="Variant.Filled" 
             EndIcon="@Icons.Material.Filled.Send" 
